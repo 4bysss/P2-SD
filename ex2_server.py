@@ -5,11 +5,13 @@ def main(host, port):
     s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((host,port))
     s.listen()
-    sockt_c,c_addr=s.accept()
-    fichero=sockt_c.recv(2048)
-    texto=fichero.decode('utf-8')
-    num=0
-    cadenaC=[]
+    sockt_c,c_addr = s.accept()
+    tam = sockt_c.recv(1024)
+    tam = int(tam.decode('utf-8'))
+    fichero = sockt_c.recv(tam)
+    texto = fichero.decode('utf-8')
+    num = 0
+    cadenaC = []
     word=texto.split()
     for i in range(0,len(word)):
         if "a" in word[i]:

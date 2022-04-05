@@ -1,18 +1,21 @@
 import argparse
 import socket
 import pickle
+import os
 def main(host, port, filein, fileout):
-    calcetin=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    calcetin = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     calcetin.connect((host, port))
-    fichero= open(filein,'rt')
-    texto=fichero.read(2048);
+    fichero = open(filein,'rt')
+    tam = os.path.getsize(filein)
+    calcetin.send(str(tam).encode('utf8'))
+    texto = fichero.read(2048);
     calcetin.send(texto.encode('utf8'))
     fichero.close()
-    buffer1=calcetin.recv(2048)
-    buffer2=calcetin.recv(2048)
+    buffer1 = calcetin.recv(tam)
+    buffer2 = calcetin.recv(2048)
     print(buffer2.decode('utf8'))
-    texto=pickle.loads(buffer1)
-    fichero= open(fileout,'wt')
+    texto = pickle.loads(buffer1)
+    fichero = open(fileout,'wt')
     print(texto)
     for i in range(0,len(texto)):
         fichero.write(texto[i])
