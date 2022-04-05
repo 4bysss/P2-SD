@@ -5,19 +5,19 @@ import os
 def main(host, port, filein, fileout):
     calcetin = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     calcetin.connect((host, port))
-    fichero = open(filein,'rt')
-    tam = os.path.getsize(filein)
-    calcetin.send(str(tam).encode('utf8'))
-    texto = fichero.read(2048);
-    calcetin.send(texto.encode('utf8'))
-    fichero.close()
-    buffer1 = calcetin.recv(tam)
-    buffer2 = calcetin.recv(2048)
-    print(buffer2.decode('utf8'))
-    texto = pickle.loads(buffer1)
+    fichero = open(filein,'rt')#Abrimos el archivo
+    tam = os.path.getsize(filein)#Calculamos el tamaño del archivo
+    calcetin.send(str(tam).encode('utf8'))#Se lo mandamos al servidor para comunicarle el tamaño del fichero
+    texto = fichero.read(2048);#SAlmacenamos el contenido del fichero en una cadena
+    calcetin.send(texto.encode('utf8'))#Mandamos la cadena
+    fichero.close()#Cerramos el fichero puesto que no se usara mas
+    buffer1 = calcetin.recv(tam)#Se recibe la lista de palabras filtradas
+    buffer2 = calcetin.recv(2048)#Se recibe el numero de palabras que cumplen la condicion
+    print(buffer2.decode('utf8'))#Decodificamos el numero antes obtenido 
+    texto = pickle.loads(buffer1)#Cargamos la lista de palabras
     fichero = open(fileout,'wt')
     print(texto)
-    for i in range(0,len(texto)):
+    for i in range(0,len(texto)):#Almacenamos la lista en un fichero
         fichero.write(texto[i])
         fichero.write('\n')
     fichero.close()
